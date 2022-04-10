@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Delegate
 {
@@ -7,79 +9,55 @@ namespace Delegate
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!\n");
-            //El delegado se usa para almacenarle un metodo y ese metodo mandarlo por parametro a otro metodo y durante
-            //su ejecucion se mostrara la ejecucion de ambos metodos.
 
-            //Devuelve un valor
-            Func<double, double, double> Sum1 = Result;
-
-            //No devuelve nada
-            Action<double, double, double> Sum2;
-
-            Show show = ShowName;
-            MakeAny(show);
-            Make(show);
+            /*      #Delegate
+             *      
+               The delegate is used to store in a variable that the delegate generates
+                        the functionality of a method and whose method we can pass as 
+                              a parameter to another function or method
 
 
-            Sum Su = SumNumbers;
-            Numbers(Su);
-            Console.WriteLine(Nada(Sum1));
-           
-            
-            
+         # Func and Action
 
-                
+                         Action does not return any value while Func does
+             */
+           Person.Register(SearchMaxNumber, new List<int> { 1, 2, 3 });
+            //Way #1
+            FindMaxNumber Fun1 = SearchMaxNumber;
+
+            Console.WriteLine(Fun1(new List<int> { 1, 5, 5, 3, 8, 9, 78 }));
+
+            //Way #2
+            FindMaxNumber Fun2 = delegate (List<int> lst)
+            {
+                return lst.OrderByDescending(d => d).First();
+            };
+
+            Console.WriteLine(Fun2(new List<int> { 1, 5, 5, 3, 8, 9, 78 }));
+
+            //Way #3
+            FindMaxNumber Fun3 = f => f.OrderByDescending(d=>d).First();
+
+            Console.WriteLine(Fun3(new List<int> { 1, 5, 5, 3, 8, 9, 78 }));
 
         }
-        public delegate void Show();
-        public delegate int Sum(int a, int b);
-        public  Func<double, double, double> Sum1 = Result;
-        public static double Nada(Func<double, double, double> Sum2)
+       public delegate int FindMaxNumber(List<int> lst);
+
+        public static int SearchMaxNumber(List<int> lst)
         {
-            return Sum2(5, 5);
-        }
-        public static double Result(double a, double b)
-        {
-            a = 10;
-            b = 20;
-
-            return a + b;
+            return lst.OrderByDescending(d => d).First();
         }
 
-        public static void Sum10(Func<double, double, double> Suma)
+        public class Person
         {
-           double Num1 = 0.50;
-           double Num2 = 0.50;
+            public static void Register(FindMaxNumber Fn, List<int> lst)
+            {
+                Console.WriteLine("A user has just registered in the database");
 
-            Console.WriteLine(Suma(Num1, Num2));
-            
+                int a = Fn(lst);
+                Console.WriteLine("Send confirmation email\n" + a);
+            }
         }
-
-        public static void ShowName()
-        {
-            Console.WriteLine("Mi nombre es Dewry");
-        }
-        public static void MakeAny(Show show)
-        {
-            Console.WriteLine("Te voy a decir mi nombre: ");
-            
-            show();
-        }
-        public static void Make(Show make)
-        {
-            Console.WriteLine("Te dije mi nombre");
-            make();
-        }
-        public static int SumNumbers(int a, int b)
-        {
-            int Result = a + b;
-            return Result;
-        }
-        public static void Numbers(Sum sum)
-        {
-            Console.WriteLine(sum(15, 10));
-            Console.WriteLine("Esta es una suma: de 10 y 15 = 25");
-            
-        }
+    
     }
 }
